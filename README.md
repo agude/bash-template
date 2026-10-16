@@ -7,7 +7,7 @@
 
 ## Creating a project
 
-Requires Git, [uv](https://docs.astral.sh/uv/), and
+Requires Git, [uv](https://docs.astral.sh/uv/) 0.13 or newer, and
 [just](https://just.systems/).
 
 ```sh
@@ -71,8 +71,12 @@ bin/example-command --help
 
 ## Development
 
-Requires [uv](https://docs.astral.sh/uv/), [just](https://just.systems/),
-and the Git submodules:
+Requires [uv](https://docs.astral.sh/uv/) 0.13 or newer, [just](https://just.systems/),
+and the Git submodules.
+
+The `.python-version` file selects Python 3.15. uv 0.13 or newer can
+download its final release. The lower uv minimum in `pyproject.toml` lets
+Dependabot update the lock on Python 3.11; CI tests that minimum.
 
 ```sh
 git submodule update --init  # Fetch Bats and its helpers, if not cloned with --recurse-submodules.

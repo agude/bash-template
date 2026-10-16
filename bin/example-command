@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# Print a greeting. Replace this with the project's command.
+#
+# This script must run under Bash 3.2, the macOS system Bash. AGENTS.md lists
+# the features to avoid.
+
+set -euo pipefail
+
+usage() {
+    cat <<'USAGE'
+Usage: example-command [options] [--] [NAME...]
+
+Print a greeting for each NAME, or for "world" when no NAME is given.
+
+Options:
+  -h, --help    Show this help.
+USAGE
+}
+
+main() {
+    local names=()
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            -h | --help)
+                usage
+                return 0
+                ;;
+            --)
+                shift
+                names+=("$@")
+                break
+                ;;
+            -*)
+                echo "example-command: unknown option: $1" >&2
+                usage >&2
+                return 2
+                ;;
+            *)
+                names+=("$1")
+                shift
+                ;;
+        esac
+    done
+
+    if [ ${#names[@]} -eq 0 ]; then
+        names=(world)
+    fi
+
+    local name
+    for name in "${names[@]}"; do
+        printf 'Hello, %s!\n' "$name"
+    done
+}
+
+main "$@"

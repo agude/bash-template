@@ -1,0 +1,24 @@
+# The shell tools come from PyPI so that uv.lock pins them and Dependabot
+# updates them. This project is not a Python package.
+[project]
+name = "example-command"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "actionlint-py>=1.7.12",
+    "pre-commit>=4.6",
+    "shellcheck-py>=0.11.0.1",
+    "shfmt-py>=4.2",
+    "zizmor>=1.30",
+]
+
+[tool.uv]
+package = false
+# Ignore releases younger than a week, so a compromised upload has time to be
+# noticed and yanked before it reaches the lock. Dependabot's cooldown matches.
+exclude-newer = "7 days"
+# Older uv releases cannot install the final release of Python 3.15.
+required-version = ">=0.13"

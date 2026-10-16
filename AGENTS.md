@@ -2,6 +2,25 @@
 
 Guidance for coding agents that work in this repository.
 
+<!-- init:template-begin -->
+## This repository is a template
+
+`scripts/init` creates projects from this repository; `README.md` describes
+how. When you change the template:
+
+- Keep it a working project. `just check` must pass with the placeholder in
+  place.
+- Write the placeholder `example-command` only where the project's own name
+  belongs. `init` replaces every occurrence and fails on any other case
+  variant.
+- Wrap template-only content in `init:template-<begin|end>` marker
+  comments. Do not nest blocks.
+- Mark files that only the template needs as `export-ignore` in
+  `.gitattributes`.
+- After changing `scripts/init`, run `just test-init` and
+  `just test-generated`.
+
+<!-- init:template-end -->
 ## Project
 
 example-command is a Bash project. Its command is `bin/example-command`, and

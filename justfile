@@ -83,3 +83,21 @@ hooks-install:
 # Remove the virtual environment.
 clean:
     rm -rf .venv
+# init:template-begin
+
+# Lint scripts/init and run its Bats tests.
+test-init:
+    uv run --locked shellcheck scripts/init test/init/*.bats
+    uv run --locked shfmt --diff {{ shfmt_style }} scripts/init test/init/*.bats
+    test/bats/bin/bats test/init
+
+# Create a project from HEAD, then check it.
+test-generated:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    root="$(mktemp -d "${RUNNER_TEMP:-${TMPDIR:-/tmp}}/test-generated.XXXXXX")"
+    trap 'rm -rf "$root"' EXIT
+    scripts/init "$root/out" generated-command --ref HEAD
+    cd "$root/out"
+    just sync check
+# init:template-end

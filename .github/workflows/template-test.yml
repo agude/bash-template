@@ -1,0 +1,72 @@
+# Template only: scripts/init removes this workflow from new projects.
+name: Template test
+
+on:
+  push:
+  pull_request:
+  schedule:
+    # Weekly, to catch upstream releases that break new projects between
+    # Dependabot updates.
+    - cron: "17 6 * * 1"
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bash-5:
+    name: Test init on Bash 5 (Ubuntu)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          submodules: true
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+      - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4.0.0
+        with:
+          just-version: "1.58.0"
+      - run: just test-init
+      - run: just test-generated
+
+  bash-3-2:
+    name: Test init on Bash 3.2 (Alpine container)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    container:
+      # Pinned by digest; update it by hand when the bash:3.2 tag moves.
+      image: bash:3.2@sha256:0fd7cb8499c63a3c9345e7088a9cd83bb69f6e895e83833859aff838a0312091
+    steps:
+      - name: Install git and just
+        run: apk add --no-cache git just
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          submodules: true
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+      - run: just test-init
+      - run: just test-generated
+
+  macos:
+    name: Test init on Bash 3.2 (macOS)
+    runs-on: macos-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Use the system Bash
+        run: echo /bin >> "$GITHUB_PATH"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          submodules: true
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+      - uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4.0.0
+        with:
+          just-version: "1.58.0"
+      - run: just test-init
+      - run: just test-generated

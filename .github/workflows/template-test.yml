@@ -48,6 +48,11 @@ jobs:
         with:
           persist-credentials: false
           submodules: true
+      # The runner user owns the workspace, but the container runs as root,
+      # and checkout trusts the workspace only during its own step. Without
+      # this, Git refuses to read the template repository in scripts/init.
+      - name: Trust the workspace repository
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
       - run: just test-init
       - run: just test-generated

@@ -81,5 +81,12 @@ BSD versions and the container ships BusyBox:
   container image is pinned by digest, every checkout sets
   `persist-credentials: false`, and each workflow starts from
   `permissions: {}`. zizmor enforces this in `just lint`.
+- Dependabot does not update these pins, so bump them by hand:
+  - `just-version` in every workflow.
+  - The `bash:3.2` image digest in the workflows.
+  - The uv `version` in the CI lint job. It matches the uv in Dependabot's
+    updater, so the lint job proves that Dependabot can update `uv.lock`.
+    Raise it, and `required-version` in `pyproject.toml`, only after a
+    Dependabot job log shows a newer uv.
 - The pre-commit hook runs `just lint` and changes nothing. If it fails, run
   `just format`, then commit again.

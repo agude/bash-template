@@ -111,6 +111,16 @@ assert_no_dest() {
     assert_no_dest
 }
 
+@test "an unknown marker block fails without creating dest" {
+    make_fixture
+    printf '# init:docs-begin\necho docs\n# init:docs-end\n' >"$FIXTURE/unknown.sh"
+    commit_fixture
+    run "$FIXTURE/scripts/init" "$DEST" my-tool --ref HEAD
+    assert_failure 1
+    assert_output --partial "unknown block docs"
+    assert_no_dest
+}
+
 @test "the project is renamed and keeps the pinned submodules" {
     run "$INIT" "$DEST" my-tool --ref HEAD
     assert_success
